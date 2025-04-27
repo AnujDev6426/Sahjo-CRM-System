@@ -11,6 +11,13 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+
+    // email: {
+    //     type: DataTypes.STRING,
+    //     unique: true,
+    //     allowNull:false
+    // },
+
     mobile: {
         type: DataTypes.STRING,
         unique: true,
@@ -29,4 +36,4 @@ const User = sequelize.define("User", {
     timestamps: false
 });
 
-module.exports = User;
+module.exports = {User};

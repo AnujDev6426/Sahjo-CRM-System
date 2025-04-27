@@ -7,4 +7,5 @@ router.use('/auth', authRoutes);
 router.use('/inventory', inventoryRoutes);
 
 
+
 module.exports = router
