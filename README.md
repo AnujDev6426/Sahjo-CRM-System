@@ -102,5 +102,5 @@
 
 <hr style="border: none; height: 1px; background-color: #ccc; margin: 30px 0;">
 
-<p><strong>📩 Contact:</strong>Don't Open any issue or contact the maintainer for collaboration.</p>
-<p><strong>📄 License:</strong>All content belongs to me.</p>
+<p><strong>📩 Contact: </strong>Don't Open any issue or no need to contact the maintainer for collaboration (Busy right now!).</p>
+<p><strong>📄 License: </strong> All content belongs to me.</p>
