@@ -8,6 +8,11 @@ const registerValidation = (data) => {
             "string.min": "Name must be atleast {#limit} charcter long.",
             "string.max": "Name cannot exceed {#limit} charcter",
         }),
+        branch: Joi.string().min(3).max(50).required().messages({
+            "string.empty": "Branch is required.",
+            "string.min": "Branch must be atleast {#limit} charcter long.",
+            "string.max": "Branch cannot exceed {#limit} charcter",
+        }),
 
         email: Joi.string().email().required().messages({
             "string.empty": "email is required.",
@@ -15,8 +20,8 @@ const registerValidation = (data) => {
         }),
 
         mobile: Joi.string()
-            .length(13)
-            .pattern(/^\+(\d{1,4})(\d{7,15})/)
+            .length(10)
+            .pattern(/^[789]\d{9}$/)
             .required()
             .messages({
                 "string.empty": "Mobile number is required.",
@@ -33,8 +38,7 @@ const registerValidation = (data) => {
                 "string.empty": "Password is mandatory.",
                 "string.min": "Password must be {#limit} character long.",
                 "string.max": "Password must be {#limit} charcter long only.",
-                "string.pattern.base":
-                    "Password must contain atleast one Uppercase character, Lowercase character, one symbol and numbers",
+                "string.pattern.base":"Password must contain atleast one Uppercase character, Lowercase character, one symbol and numbers",
             }),
 
         confirm_password: Joi.string()
@@ -48,39 +52,6 @@ const registerValidation = (data) => {
     return schema.validate(data);
 };
 
-
-// Otp Validation===============================>
-const otpValidation = (data) => {
-    const schema = Joi.object({
-        mobile: Joi.string()
-            .length(13)
-            .pattern(/^\+(\d{1,4})(\d{7,15})/)
-            .required()
-            .messages({
-                "string.empty": "Mobile number is mandatory",
-                "string.length": "Mobile number must be exactly 10 digit.",
-                "string.pattern.base": "Mobile number can contain only numeric values",
-            }),
-        otp: Joi.string()
-            .length(6)
-            .pattern(/^[0-9]/)
-            .required({
-                "string.empty": "OTP is required.",
-                "string.length": "OTP cannot contain less than or more than 6 digits.",
-                "string.pattern.base": "OTP cannot contain characters rather than numeric value."
-            }),
-        type: Joi.string()
-            .valid('signUp', 'login', 'forgetPassword', 'mobileChange')
-            .required()
-            .messages({
-                'any.required': 'Type is required.',
-                'string.base': 'Type must be a string.',
-                'string.empty': 'Type cannot be empty.',
-                'any.only': 'Type must be either "signup" or "login" or "forgetPassword" or "mobileChange".'
-            })
-    });
-    return schema.validate(data);
-};
 
 // Login details Validation====================================>
 const loginValidation = (data) => {
@@ -158,21 +129,6 @@ const resetPasswordValidation = (data) => {
     return schema.validate(data);
 };
 
-// resent Otp Validation===============================>
-const resendOtpValidation = (data) => {
-    const schema = Joi.object({
-        mobile: Joi.string()
-            .length(13)
-            .pattern(/^\+(\d{1,4})(\d{7,15})/)
-            .required()
-            .messages({
-                "string.empty": "Mobile number is mandatory",
-                "string.length": "Mobile number must be exactly 10 digit.",
-                "string.pattern.base": "Mobile number can contain only numeric values",
-            }),
-    });
-    return schema.validate(data);
-};
 
-module.exports = { registerValidation, otpValidation, loginValidation, forgetPasswordValidation, resetPasswordValidation, resendOtpValidation };
+module.exports = { registerValidation, loginValidation, forgetPasswordValidation, resetPasswordValidation };
 

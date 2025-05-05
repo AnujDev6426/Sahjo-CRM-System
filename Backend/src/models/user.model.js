@@ -28,27 +28,20 @@ const User = sequelize.define("User", {
     },
     branch: {
         type: DataTypes.STRING,
-        allowNull:true
+        allowNull: false,
+        
     },
     status: {
         type: DataTypes.ENUM('active', 'inactive', 'disabled'),
       allowNull:false  
     },
-    otp: {
-      type: DataTypes.INTEGER,
-        allowNull: true,
-    },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
     }
 }, {
-    tableName: "users",
-    timestamps: false
+    tableName: "user",
+    timestamps: true
 });
 
 module.exports = {User};
