@@ -38,3 +38,7 @@ const Inventory = sequelize.define('Inventory', {
     tableName: 'inventory',
     timestamps: true
 });
+
+module.exports = {
+    Inventory
+}

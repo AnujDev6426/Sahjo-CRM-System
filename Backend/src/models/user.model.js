@@ -3,8 +3,7 @@ const {sequelize} = require("../config/db");
 
 const User = sequelize.define("User", {
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.STRING,
         primaryKey: true,
     },
     name: {
@@ -12,16 +11,32 @@ const User = sequelize.define("User", {
         allowNull: false,
     },
 
-    // email: {
-    //     type: DataTypes.STRING,
-    //     unique: true,
-    //     allowNull:false
-    // },
+    email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull:false
+    },
 
     mobile: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+    },
+    role: {
+        type: DataTypes.ENUM('admin', 'employee'),
+        allowNull:true
+    },
+    branch: {
+        type: DataTypes.STRING,
+        allowNull:true
+    },
+    status: {
+        type: DataTypes.ENUM('active', 'inactive', 'disabled'),
+      allowNull:false  
+    },
+    otp: {
+      type: DataTypes.INTEGER,
+        allowNull: true,
     },
     password: {
         type: DataTypes.STRING,

@@ -1,31 +1,50 @@
 const {registerValidation, loginValidation} = require('../utils/auth.validation') 
 const bcrypt = require('bcrypt');
+const { v4 : uuidv4 } = require('uuid');
+const {sequelize} = require('../config/db')
 const { User } = require('../models/user.model');
-const  sendEmail  = require('../services/email.service')
+const sendEmail = require('../services/email.service')
 
 
 
 const register = async (req, res) => {
+
+    await sequelize.sync({ force: false });
+ 
     const { error } = registerValidation(req.body);
     if (error) {
         return res.status(400).json({ message: error.details[0].message.replace(/"/g, " ") });
     }
 
-    const { email, password, name, mobile } = req.body;
+    const { name, email, mobile, password } = req.body;
 
     try {
-        const emailExists = await User.findOne({ email });
+      const emailExists =await User.findOne({
+            where: {
+                email: email 
+            }
+        });
+        const mobileExists = await User.findOne({
+            where: {
+                mobile: mobile
+            }
+});
         if (emailExists) {
-            return res.status(400).json({ message: "Email already registered" });
+            return res.status(400).json({ message: "Email already registered!" });
+        }
+        if (mobileExists) {
+            return res.status(400).json({ message: "Mobile No. already registered!" });
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const user = new User({
+            id:uuidv4(),
             name,
             email,
             mobile,
+            status:'active',
             password: hashedPassword
         });
 
@@ -36,6 +55,51 @@ const register = async (req, res) => {
         res.status(500).json({ message: "Internal Server error", error: err.message });
     }
 };
+
+
+const verifyOtp = async (req, res) => {
+    const { email, mobile } = req.body;
+    try {
+
+        const emailExists = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+        const mobileExists = await User.findOne({
+            where: {
+                mobile: mobile
+            }
+        });
+        if (emailExists) {
+            return res.status(400).json({ message: "Email already registered!" });
+        }
+        if (mobileExists) {
+            return res.status(400).json({ message: "Mobile No. already registered!" });
+        }
+
+        const otpGen = () => {
+            return Math.ceil(Math.random()*900000) + 100000
+        }
+
+        
+        
+        // await sendEmail(
+        //     `Verify OTP for Registeration!`,
+        //     "Use below OTP for registration",
+        //     `<p>Use the below OTP for Verification : <b>${newOtp}</b></p>`,
+        //     email
+        // );
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            error:error.message
+        })
+    }
+}
+
+
+
 
 
 const login = async (req, res) => {
@@ -52,10 +116,10 @@ const login = async (req, res) => {
 
             try {
                 await sendEmail(
-                    `Sahjo CRM got Logged In`,
+                    `Sahjo CRM just got Logged In!`,
                     "Someone has logged into the Sahjo System.",
                     `<p>Sahjo CRM got Logged In at: ${ new Date().toString() }</p>`,
-                    "kumawatdeepak8502@gmail.com"
+                    "pkparmeshwar552@gmail.com"
                 );
             } catch (emailError) {
                 console.error("❌ Error sending email:", emailError);
@@ -79,4 +143,4 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { login, register }
+module.exports = { login, register, verifyOtp }
