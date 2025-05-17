@@ -1,12 +1,9 @@
-const {
-  loginValidation,
-} = require("../utils/auth.validation");
+const { loginValidation } = require("../utils/auth.validation");
 const { tokenGen } = require("../middlewares/jwt.middleware");
-const  {Employees}  = require("../models/employees");
+const { Employees } = require("../models/employees");
 const sendEmail = require("../services/email.service");
 const { isPassValid } = require("../middlewares/bcrypt.middleware");
-const { Session } = require("../models/session");
-const {Branches} = require('../models/branches')
+const { Branches } = require("../models/branches");
 
 const login = async (req, res) => {
   const { error } = loginValidation(req.body);
@@ -19,22 +16,25 @@ const login = async (req, res) => {
   const { phone, password } = req.body;
 
   try {
-    const user = await Employees.findOne({ where: { phone }, include: [{ model: Branches, as: 'branch' }], });
-    console.log(user.toJSON().name);
+    const user = await Employees.findOne({
+      where: { phone },
+      include: [{ model: Branches, as: "branch" }],
+    });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "Invalid Phone Number" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Invalid Phone Number" });
     }
+    
     const isPass = await isPassValid(password, user.password);
 
     if (isPass) {
       const token = tokenGen(user.emp_id, user.role);
 
-
       const admin = await Employees.findOne({
-        where: { role: 'admin' }
+        where: { role: "admin" },
       });
-      // console.log(admin.email);
 
       res.status(200).json({
         success: true,
@@ -42,18 +42,20 @@ const login = async (req, res) => {
         token,
       });
 
-      let userBranch = `${user.toJSON().branch.name} ${JSON.parse(user.toJSON().branch.address).city}`
-      // console.log(userBranch)
+      let userBranch = `${user.toJSON().branch.name} ${
+        JSON.parse(user.toJSON().branch.address).city
+      }`;
 
       await sendEmail(
         "Employee Login Notification",
         "Sahjo Workspace just got Logged In!",
-        `<p>Sahjo Workspace got Logged In on ${new Date().toLocaleString()} at<b> ${userBranch}</b>  branch by <b>${user.toJSON().name}</b></p>`,
+        `<p>Sahjo Workspace got Logged In on ${new Date().toLocaleString()} at<b> ${userBranch}</b>  branch by <b>${
+          user.toJSON().name
+        }</b></p>`,
         `${admin.email}`
       );
 
       return;
-
     } else {
       return res.status(400).json({ message: "Invalid Password!" });
     }

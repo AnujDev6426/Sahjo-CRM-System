@@ -8,7 +8,8 @@ const { sequelize } = require('../config/db');
     },
     name: DataTypes.STRING,
     address: DataTypes.JSON,
-    created_At: DataTypes.DATE,
+  }, {
+    timestamps:true
   });
 
 module.exports = {Branches};
