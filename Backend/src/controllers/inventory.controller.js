@@ -1,4 +1,4 @@
-const Inventory = require('../models/inventory.model');
+const Inventory = require('../models/inventory');
 
 // Create a new inventory record
 const createInventory = async (req, res) => {

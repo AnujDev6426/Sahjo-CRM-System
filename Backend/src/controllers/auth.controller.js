@@ -1,112 +1,69 @@
 const {
-  registerValidation,
   loginValidation,
 } = require("../utils/auth.validation");
-const { v4: uuidv4 } = require("uuid");
 const { tokenGen } = require("../middlewares/jwt.middleware");
-const { User } = require("../models/user.model");
+const  {Employees}  = require("../models/employees");
 const sendEmail = require("../services/email.service");
-const { hashPass, isPassValid } = require("../middlewares/bcrypt.middleware");
+const { isPassValid } = require("../middlewares/bcrypt.middleware");
+const { Session } = require("../models/session");
+const {Branches} = require('../models/branches')
 
-const register = async (req, res) => {
-  const { error } = registerValidation(req.body);
+const login = async (req, res) => {
+  const { error } = loginValidation(req.body);
   if (error) {
     return res
       .status(400)
       .json({ message: error.details[0].message.replace(/"/g, " ") });
   }
 
-  const { name, email, mobile, branch, password } = req.body;
+  const { phone, password } = req.body;
 
   try {
-    const emailExists = await User.findOne({
-      where: {
-        email: email,
-      },
-    });
-    const mobileExists = await User.findOne({
-      where: {
-        mobile: mobile,
-      },
-    });
-    if (emailExists) {
-      return res.status(400).json({ message: "Email already registered!" });
+    const user = await Employees.findOne({ where: { phone }, include: [{ model: Branches, as: 'branch' }], });
+    console.log(user.toJSON().name);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Invalid Phone Number" });
     }
-    if (mobileExists) {
-      return res
-        .status(400)
-        .json({ message: "Mobile No. already registered!" });
-    }
+    const isPass = await isPassValid(password, user.password);
 
-      const hashedPassword =await hashPass(password);
+    if (isPass) {
+      const token = tokenGen(user.emp_id, user.role);
 
-    const user = new User({
-      id: uuidv4(),
-      name,
-      email,
-      mobile,
-      branch,
-      role: "employee",
-      status: "active",
-      password: hashedPassword,
-    });
 
-    const savedUser = await user.save();
+      const admin = await Employees.findOne({
+        where: { role: 'admin' }
+      });
+      // console.log(admin.email);
 
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    console.log(err);
-    res
-      .status(500)
-      .json({ message: "Internal Server error auth", error: err.message });
-  }
-};
+      res.status(200).json({
+        success: true,
+        message: "Logged in successfully ✅",
+        token,
+      });
 
-const login = async (req, res) => {
-  const { mobile, password } = req.body;
+      let userBranch = `${user.toJSON().branch.name} ${JSON.parse(user.toJSON().branch.address).city}`
+      // console.log(userBranch)
 
-  if (!mobile || !password) {
-    return res
-      .status(400)
-      .json({ message: "Mobile No. or Password cannot be empty!" });
-  }
+      await sendEmail(
+        "Employee Login Notification",
+        "Sahjo Workspace just got Logged In!",
+        `<p>Sahjo Workspace got Logged In on ${new Date().toLocaleString()} at<b> ${userBranch}</b>  branch by <b>${user.toJSON().name}</b></p>`,
+        `${admin.email}`
+      );
 
-  const user = await User.findOne({ mobile });
-  const isPass = isPassValid(password, user.password);
+      return;
 
-  try {
-    if (mobile == user.mobile && isPass) {
-      const token = tokenGen(user.id, user.role);
-      try {
-        await sendEmail(
-          `Sahjo Workspace just got Logged In!`,
-          "Someone has logged into the Sahjo Workspace.",
-          `<p>Sahjo Workspace got Logged In at: ${new Date().toString()} by User: ${
-            user.name
-          }</p>`,
-          "pkparmeshwar552@gmail.com"
-        );
-
-        return res.status(200).json({ success: true, token });
-      } catch (emailError) {
-        console.error("❌ Error sending email:", emailError);
-        return res.status(500).json({
-          message: "Login successful but failed to send email notification.",
-          error: emailError.message || "Unknown email error",
-        });
-      }
     } else {
-      return res
-        .status(400)
-        .json({ message: "Invalid Mobile No. or Password!" });
+      return res.status(400).json({ message: "Invalid Password!" });
     }
-  } catch (error) {
-    console.error("❌ Error in login controller:", error);
+  } catch (err) {
+    console.error("❌ Login Error:", err);
     return res.status(500).json({
-      message: "Internal Server Error while logging in!",
-      error: error.message || "Unknown error",
+      message: "Internal Server Error during login",
+      error: err.message,
     });
   }
 };
 
-module.exports = { login, register };
+module.exports = { login };

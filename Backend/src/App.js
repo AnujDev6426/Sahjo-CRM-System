@@ -14,7 +14,9 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use('/E-admin', routes);
+require('./Association');
+
+app.use('/admin', routes);
 
 connectDB();
 

@@ -9,4 +9,4 @@ const tokenGen = (userId, role) => {
 }
 
 
-module.exports = {tokenGen}
+module.exports = {tokenGen}  
