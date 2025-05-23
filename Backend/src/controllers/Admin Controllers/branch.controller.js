@@ -51,6 +51,9 @@ const getAllBranches = async (req, res) => {
 const branchById = async (req, res) => {
     const { branch_id } = req.body;
 
+    if (!branch_id) {
+        return res.status(400).json({ success: false, message: 'branch_id is required' });
+    }
     try {
         
         const branch = await Branches.findByPk(branch_id);
@@ -69,7 +72,31 @@ const branchById = async (req, res) => {
     }
 }
 
+// const deleteBranch = async (req, res) => {
+//     const { branch_id } = req.body;
 
+//     if (!branch_id) {
+//         return res.status(400).json({ success: false, message: 'branch_id is required' });
+//     }
+
+//     try {
+//         const branch = await Branches.findByPk(branch_id);
+
+//         if (!branch) {
+//             return res.status(404).json({ success: false, message: 'Branch not found' });
+//         }
+//         await branch.destroy();
+
+//         return res.status(200).json({ success: true, message: 'Branch deleted successfully' });
+
+//     } catch (error) {
+//         console.error('Error while deleting the branch:', error);
+//         return res.status(500).json({
+//             success: false,
+//             message: 'Internal Server Error while deleting the branch'
+//         });
+//     }
+// };
 
 
 

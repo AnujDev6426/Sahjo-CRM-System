@@ -3,15 +3,10 @@ const Inventory = require('../models/inventory');
 // Create a new inventory record
 const createInventory = async (req, res) => {
     try {
-        const isArray = Array.isArray(req.body);
 
-        if (isArray) {
-            await Inventory.bulkCreate(req.body);
-            res.status(201).json({ message: 'Multiple inventory records added successfully!' });
-        } else {
             await Inventory.create(req.body);
             res.status(201).json({ message: 'New Stock has been added!' });
-        }
+    
     } catch (error) {
         if (error.name === "SequelizeUniqueConstraintError") {
             return res.status(400).json({

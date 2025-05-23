@@ -16,7 +16,7 @@ app.use(cors());
 
 require('./Association');
 
-app.use('/admin', routes);
+app.use('/workspace', routes);
 
 connectDB();
 
