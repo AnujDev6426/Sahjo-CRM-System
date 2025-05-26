@@ -31,7 +31,7 @@ const login = async (req, res) => {
     const isPass = await isPassValid(password, user.password);
 
     if (isPass) {
-      const token = tokenGen(user.emp_id, user.role);
+      const token = tokenGen(user.emp_id, user.role, user.name);
 
       const admin = await Employees.findOne({
         where: { role: "admin" },

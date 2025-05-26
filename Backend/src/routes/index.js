@@ -4,11 +4,14 @@ const authRoutes = require('./auth.routes');
 const employeeRoutes = require('./Admin Routes/employee.routes');
 const branchRoutes = require('./Admin Routes/branch.routes');
 const { roleChecker } = require('../middlewares/role.middleware');
-const {verifyToken} = require('../middlewares/jwt.middleware')
+const { verifyToken } = require('../middlewares/jwt.middleware');
+const inventoryRoutes = require('../routes/inventory.routes');
+
 
 router.use('/auth', authRoutes);
 router.use('/employee',verifyToken, roleChecker('admin'), employeeRoutes);
-router.use('/branches', verifyToken , roleChecker('admin'), branchRoutes);
+router.use('/branches', verifyToken, roleChecker('admin'), branchRoutes);
+router.use('/inventory', verifyToken, roleChecker('admin', 'employee'), inventoryRoutes);
 
 
 module.exports = router

@@ -1,50 +1,75 @@
 import React from "react";
 
-const Sidebar = ({ children }) => {
+const Sidebar = (user) => {
   return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Sidebar Section */}
-        <nav className="col-md-2 d-none d-md-block sidebar bg-white shadow-sm">
-          <div className="pt-4">
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-speedometer2 me-2"></i> Dashboard
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-people me-2"></i> Customers
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-person-plus me-2"></i> Leads
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-box-seam me-2"></i> Orders
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-truck me-2"></i> Shipments
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-truck-front me-2"></i> Fleet
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-credit-card me-2"></i> Billing
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-graph-up-arrow me-2"></i> Reports
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-dark fw-medium">
-              <i className="bi bi-gear me-2"></i> Settings
-            </a>
-            <a href="#" className="d-block py-2 px-3 text-decoration-none text-danger fw-medium mt-4">
-              <i className="bi bi-box-arrow-right me-2"></i> Logout
-            </a>
-          </div>
-        </nav>
-
-        {/* Main Content Section */}
-        <main className="col-md-10 ms-sm-auto px-md-4 py-4">
-          {children}
-        </main>
+    <div className="d-flex flex-column vh-100 p-3 bg-dark shadow-sm border-end text-white">
+      {/* Profile Section */}
+      <div className="d-flex align-items-center mb-4 px-3">
+        <img
+          src="/assets/admin.jpg"
+          alt="Profile"
+          className="rounded-circle me-2"
+          width="40"
+          height="40"
+        />
+     
+          <div className="fw-bold">{user.name}</div>
+          
       </div>
+
+      {/* Navigation */}
+      <ul className="nav nav-pills flex-column">
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-speedometer2 me-2"></i> Dashboard
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-people me-2"></i> Customers
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-person-plus me-2"></i> Leads
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-box-seam me-2"></i> Orders
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-truck me-2"></i> Shipments
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-truck-front me-2"></i> Fleet
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-credit-card me-2"></i> Billing
+          </a>
+        </li>
+        <li className="nav-item">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-graph-up-arrow me-2"></i> Reports
+          </a>
+        </li>
+        <li className="nav-item mt-auto">
+          <a href="#" className="nav-link text-white">
+            <i className="bi bi-gear me-2"></i> Settings
+          </a>
+        </li>
+        <li className="nav-item mt-3">
+          <a href="#" className="nav-link text-danger fw-bold">
+            <i className="bi bi-box-arrow-right me-2"></i> Logout
+          </a>
+        </li>
+      </ul>
     </div>
   );
 };

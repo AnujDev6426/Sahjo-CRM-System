@@ -7,10 +7,11 @@ const {sequelize} = require('../config/db');
       primaryKey: true,
     },
     consignor: DataTypes.STRING,
-    consignee: DataTypes.BIGINT,
-    entry_date: DataTypes.DATE,
+    consignor_gst:DataTypes.STRING,
+    consignee: DataTypes.STRING,
+    consignee_gst:DataTypes.STRING,
     grNo: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       unique: true,
     },
     source: DataTypes.STRING,
@@ -32,7 +33,11 @@ const {sequelize} = require('../config/db');
     isOrdered: DataTypes.BOOLEAN,
     isBilty: DataTypes.BOOLEAN,
     status: DataTypes.ENUM("active", "inactive", "return"),
-  });
+  },
+    {
+    timestamps:true
+  }
+  );
 
 
 module.exports = {Inventory}

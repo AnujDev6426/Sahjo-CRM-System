@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const {isTokenBlacklisted} = require('./tokenRevoke')
 
-const tokenGen = (userId, role) => {
+const tokenGen = (userId, role, userName) => {
     try {
-        return jwt.sign({ userId, role }, process.env.JWT_SECRET, {expiresIn:'10h'})
+        return jwt.sign({ userName, userId, role }, process.env.JWT_SECRET, {expiresIn:'10h'})
     } catch (error) {
         throw new Error("Error Generating JWT", error);
     }

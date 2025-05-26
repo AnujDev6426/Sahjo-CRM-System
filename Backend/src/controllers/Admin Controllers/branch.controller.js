@@ -8,7 +8,7 @@ const addBranch = async (req, res) => {
         return res.status(400).json({ success: false, message: error.details[0].message.replace(/"/g, " ") });
     }
 
-    const { name, building, street, city, country, pincode } = req.body;
+    const { name, building, street,state, city, country, pincode } = req.body;
 
 
     try {
@@ -20,6 +20,7 @@ const addBranch = async (req, res) => {
                 building,
                 street,
                 city,
+                state,
                 country,
                 pincode
             }

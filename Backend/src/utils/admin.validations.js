@@ -124,6 +124,9 @@ const branchValidation = (data) => {
     city: Joi.string().required().messages({
       "string.empty": "City is required!",
     }),
+    state: Joi.string().required().messages({
+      "string.empty": "State is required!",
+    }),
     country: Joi.string().required().messages({
       "string.empty": "Country is required!",
     }),
