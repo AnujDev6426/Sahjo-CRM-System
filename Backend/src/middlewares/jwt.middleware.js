@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const {isTokenBlacklisted} = require('./tokenRevoke')
 
-const tokenGen = (userId, role, userName) => {
+const tokenGen = (user) => {
     try {
-        return jwt.sign({ userName, userId, role }, process.env.JWT_SECRET, {expiresIn:'10h'})
+        return jwt.sign({user}, process.env.JWT_SECRET, {expiresIn:'10h'})
     } catch (error) {
         throw new Error("Error Generating JWT", error);
     }
@@ -23,6 +23,8 @@ const verifyToken = async (req, res, next) => {
 
         const isVerified = jwt.verify(token, process.env.JWT_SECRET);
         req.user = isVerified;
+        // res.json(req.user);
+        // console.log(req.user)
         next();
     } catch (err) {
         return res.status(401).json({ message: 'Invalid Token' });
